@@ -1,71 +1,27 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import debounce from 'lodash/debounce'
-import { requests } from '../ultilities/requests'
 import SearchBox from '../components/search_box'
 import WeatherCardGroup from '../components/weather_card_group'
-import { getDate } from '../ultilities/date'
 
-const Main = () => {
-  const [cityList, setCityList] = useState([])
+const Main = ({ weatherList, requestWeatherList, isWeatherListLoading, cityList, isCityListLoading, requestCityList, setCityInput, cityInput }) => {
+  const [city, setCity] = useState({})
   const [showSuggestion, setShowSuggestion] = useState(false)
-  const [datesWeather, setDatesWeather] = useState([])
-  const [cityListLoading, setCityListLoading] = useState(false)
-  const [weatherListLoading, setWeatherListLoading] = useState(false)
 
-  let formattedCitiesList = []
+  useEffect(() => {
+    cityInput ? 
+    requestCityList({ city: cityInput }) : ''
+  }, [cityInput])
 
-  const clickItem = (item) => {
-    setShowSuggestion(false)
-    const dates = []
-    for (let i = 0; i < 5; i++) {
-      let newDate = new Date()
-      newDate.setDate(newDate.getDate() + i)
-      const date = getDate(newDate)
-      dates.push(date)
-    }
-    setWeatherListLoading(true)
-    getWeather(item, dates)
-  }
+  useEffect(() => {
+    setShowSuggestion(true)
+  }, [cityList])
 
-  const getWeather = async (city, dates) => {
-    const promises = []
-    let formattedResults = []
-    for (let i = 0; i < dates.length; i++) {
-      promises.push(requests('get', `location/${city.woeid}/${dates[i]}`))
-    }
-    Promise.all(promises)
-      .then(result => {
-        for (let i = 0; i < result.length; i++) {
-          formattedResults.push({
-            date: dates[i],
-            weather: result[i][0],
-            index: i
-          })
-        }
-        setDatesWeather(formattedResults)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-      .finally(() => {
-        setWeatherListLoading(false)
-      })
-  }
+  useEffect(() => {
+    city && city.woeid ? requestWeatherList({cityId: city.woeid}) : ''
+  }, [city])
 
-  const getCityList = useCallback(debounce(async (city) => {
-    try {
-      const citiesRequest = await requests('get', `location/search/?query=${city}`)
-      formattedCitiesList = citiesRequest ? citiesRequest.map(city => ({
-        title: city.title || '',
-        woeid: city.woeid || ''
-      })) : ''
-      setCityList(formattedCitiesList)
-      setShowSuggestion(true)
-    } catch (err) {
-      console.log(err)
-    } finally {
-      setCityListLoading(false)
-    }
+  const setInputDebounce = useCallback(debounce((city) => {
+    setCityInput(city)
   }, 1000), [])
 
   return (
@@ -73,15 +29,17 @@ const Main = () => {
       <SearchBox
         showSuggestion={showSuggestion}
         citiesList={cityList}
-        clickItem={clickItem}
-        cityListLoading={cityListLoading}
-        weatherListLoading={weatherListLoading}
+        clickItem={(city) => {
+          setShowSuggestion(false)
+          setCity(city)
+        }}
+        cityListLoading={isCityListLoading}
+        weatherListLoading={isWeatherListLoading}
         getCityList={city => {
-          setCityListLoading(true)
-          getCityList(city)
+          setInputDebounce(city)
         }} />
       <WeatherCardGroup
-        data={datesWeather}
+        data={weatherList}
       ></WeatherCardGroup>
     </div>
   )
