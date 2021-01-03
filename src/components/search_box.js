@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Container, Form, Spinner, Button } from 'react-bootstrap'
 import useOuterClick from '../ultilities/use_outer_click'
@@ -7,6 +8,9 @@ const StyledSearchBoxContainer = styled(Container)`
   font-size: 1rem;
   display: flex;
   justify-content: center;
+  input: {
+    border: none;
+  }
   .suggestion-div-container {
     position: relative;
     width: 20rem;
@@ -19,6 +23,19 @@ const StyledSearchBoxContainer = styled(Container)`
   }
   .form-group {
     margin: 0;
+  }
+`
+
+const StyledFormGroup = styled(Form.Group)`
+  height: 2.5rem;
+`
+
+const StyledFormControl = styled(Form.Control)`
+  border: none;
+  border-radius: 0;
+  height: 100%;
+  &:focus {
+    box-shadow: none;
   }
 `
 
@@ -50,10 +67,6 @@ const StyledSuggestionLi = styled.li`
   }
 `
 
-const StyledSpinner = styled(Spinner)`
-  margin: 2rem;
-`
-
 const StyledButton = styled(Button)`
   background-color: initial!important;
   border: none;
@@ -69,7 +82,7 @@ const SearchBox = ({ citiesList, clickItem, getCityList, showSuggestion, cityLis
   const [city, setCity] = useState('')
   const [ownSuggestionShow, setOwnSuggestionShow] = useState(true)
 
-  const innerRef = useOuterClick(event => {
+  const innerRef = useOuterClick(() => {
     if (showSuggestion) {
       setOwnSuggestionShow(false)
     }
@@ -85,16 +98,16 @@ const SearchBox = ({ citiesList, clickItem, getCityList, showSuggestion, cityLis
     <StyledSearchBoxContainer>
       <div className="suggestion-div-container" ref={innerRef}>
         <Form onSubmit={e => e.preventDefault()}>
-          <Form.Group controlId="formSearchCity">
+          <StyledFormGroup controlId="formSearchCity">
 
-            <Form.Control autoComplete="off" type="text" placeholder="Search city..." value={city} onChange={e => {
+            <StyledFormControl autoComplete="off" type="text" placeholder="Search city..." value={city} onChange={e => {
               setCity(e.target.value)
               const value = e.target.value.trim()
               if (value) {
                 getCityList(value) 
               }
             }}>
-            </Form.Control>
+            </StyledFormControl>
             {cityListLoading ? <StyledButton disabled>
               <Spinner
                 as="span"
@@ -104,14 +117,14 @@ const SearchBox = ({ citiesList, clickItem, getCityList, showSuggestion, cityLis
                 aria-hidden="true"
               />
             </StyledButton> : ''}
-          </Form.Group>
+          </StyledFormGroup>
         </Form>
         {weatherListLoading ? <div className="spinner-container"><Spinner as={'span'} animation="border" role="status">
             </Spinner></div> : ''}
         {
           showSuggestion && ownSuggestionShow ? <StyledSuggestionUl>
             {
-              citiesList ? citiesList.map((cityInList, index) => (<StyledSuggestionLi key={index} onClick={e => {
+              citiesList ? citiesList.map((cityInList, index) => (<StyledSuggestionLi key={index} onClick={() => {
                 setCity(cityInList.title)
                 clickItem(cityInList)
               }
@@ -123,6 +136,15 @@ const SearchBox = ({ citiesList, clickItem, getCityList, showSuggestion, cityLis
       </div>
     </StyledSearchBoxContainer>
   )
+}
+
+SearchBox.propTypes = {
+  citiesList: PropTypes.array,
+  clickItem: PropTypes.func,
+  getCityList: PropTypes.func,
+  showSuggestion: PropTypes.bool,
+  cityListLoading: PropTypes.bool,
+  weatherListLoading: PropTypes.bool,
 }
 
 export default SearchBox

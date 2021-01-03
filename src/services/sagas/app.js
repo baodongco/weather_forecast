@@ -1,7 +1,7 @@
-import { call, put, takeLatest, delay, debounce, take, fork, all } from 'redux-saga/effects'
-import { REQUEST_CITY_LIST, REQUEST_WEATHER_LIST, SET_CITY_INPUT } from '../redux/app/actionTypes'
+import { call, put, takeLatest, all } from 'redux-saga/effects'
+import { REQUEST_CITY_LIST, REQUEST_WEATHER_LIST } from '../redux/app/actionTypes'
 import { setCityList, setWeatherList } from '../redux/app/actions'
-import { setCityInput, setError, setCityListLoading, setWeatherListLoading, unsetCityListLoading, unsetWeatherListLoading } from '../redux/app/actions'
+import { setError, setCityListLoading, setWeatherListLoading, unsetCityListLoading, unsetWeatherListLoading } from '../redux/app/actions'
 import weatherApiCalls from '../apiCalls/weather'
 import { getDate } from '../../ultilities/date'
 
@@ -11,7 +11,6 @@ function* getCityList({ payload }) {
   try {
     yield put(setCityListLoading())
     const response = yield call(weatherApiCalls.getCity, city)
-    // const { data } = response
     const formattedCitiesList = response.map(city => ({
       title: city.title || '',
       woeid: city.woeid || ''
@@ -19,7 +18,7 @@ function* getCityList({ payload }) {
 
     yield put(setCityList(formattedCitiesList))
   } catch (error) {
-    yield put(setError(error.data))
+    error.response && error.response && error.response.data ? yield put(setError(error.response.data)) : yield put(setError('Something went wrong! Please try again later!'))
   } finally {
     yield put(unsetCityListLoading())
   }
@@ -51,7 +50,7 @@ function* getWeathers({ payload }) {
 
     yield put(setWeatherList(formattedResults))
   } catch (error) {
-    yield put(setError(error.data))
+    error.response && error.response && error.response.data ? yield put(setError(error.response.data)) : yield put(setError('Something went wrong! Please try again later!'))
   } finally {
     yield put(unsetWeatherListLoading())
   }

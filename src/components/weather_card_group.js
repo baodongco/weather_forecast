@@ -1,3 +1,5 @@
+import React from 'react'
+import PropTypes from 'prop-types'
 import moment from 'moment'
 import { Card, Container, CardGroup } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -51,6 +53,10 @@ const WeatherCardGroup = ({ data }) => {
       </StyledCardGroups>
     </Container>
   )
+}
+
+WeatherCardGroup.propTypes = {
+  data: PropTypes.array,
 }
 
 export default WeatherCardGroup

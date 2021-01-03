@@ -10,6 +10,6 @@ export function requests(method, endpoint, body) {
       return result.data
     })
     .catch(err => {
-      throw err.response
+      throw err
     })
 }

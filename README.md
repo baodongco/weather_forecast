@@ -1,6 +1,7 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A weather forecast example that allows user to find a city then
+show weather of 7 days from today
 
 ## Available Scripts
 
