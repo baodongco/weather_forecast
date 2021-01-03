@@ -1,13 +1,17 @@
 # Getting Started with Create React App
 
-A weather forecast example that allows user to find a city then
-show weather of 7 days from today
+A weather forecast example that allows user to find a city then show weather of 7 days from today.
+
+Unit tests will be updated soon.
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm start`
+### `yarn install` or `npm install`
+
+Install needed dependancies before starting the application
+### `npm start` or `yarn start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
@@ -15,12 +19,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `npm test`
+### `npm test` or `yarn test`
 
 Launches the test runner in the interactive watch mode.\
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+### `npm run build` oar `yarn build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -30,7 +34,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### `npm run eject` or `yarn eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
