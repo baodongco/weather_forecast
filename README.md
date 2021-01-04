@@ -4,6 +4,10 @@ A weather forecast example that allows user to find a city then show weather of 
 
 Unit tests will be updated soon.
 
+## Environmenbt setup
+
+Copy .env.example to new file .env
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -11,6 +15,7 @@ In the project directory, you can run:
 ### `yarn install` or `npm install`
 
 Install needed dependancies before starting the application
+
 ### `npm start` or `yarn start`
 
 Runs the app in the development mode.\
